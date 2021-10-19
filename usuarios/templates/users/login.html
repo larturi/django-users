@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %} Django Users App {% endblock title %}
+
+{% block content %}
+  <div class="container">
+
+    <div class="columns">
+      <div class="column"></div>
+
+      <div class="column is-four-fifths">
+        <section class="section">
+
+          <h1 class="title">Login Usuario</h1>
+
+          <form class="box" method="post">
+            {% csrf_token %}
+            
+            <div class="field">
+              <label class="label">{{ form.email.label_tag }}</label>
+              <div class="control">
+                {{ form.email }}
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label">{{ form.password.label_tag }}</label>
+              <div class="control">
+                {{ form.password }}
+              </div>
+            </div>
+    
+            <button type="submit" class="button is-primary">Login</button>
+          </form>
+    
+        </section>
+      </div>
+      <div class="column"></div>
+    </div>
+
+  </div>
+
+{% endblock content %}
+
+
+
+

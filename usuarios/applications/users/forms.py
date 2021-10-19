@@ -1,6 +1,30 @@
 from django import forms
 from .models import User
 
+class LoginForm(forms.Form):
+
+    email = forms.CharField(
+        label='Email',
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': 'Email',
+                'class': 'input'
+            }
+        )
+    )
+
+    password = forms.CharField(
+        label='Password',
+        required=True,
+        widget=forms.PasswordInput(
+            attrs={
+                'placeholder': 'Password',
+                'class': 'input'
+            }
+        )
+    )
+
 class UserRegisterForm(forms.ModelForm):
 
     GENDER_CHOICES = (
@@ -96,3 +120,7 @@ class UserRegisterForm(forms.ModelForm):
             'last_name',
             'gender',
         )
+
+    def clean_password2(self):
+        if self.cleaned_data['password1'] != self.cleaned_data['password2']:
+            self.add_error('password2', 'Las contraseñas no coinciden')

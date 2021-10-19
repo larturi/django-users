@@ -13,7 +13,7 @@
 
           <h1 class="title">Registrar Usuario</h1>
 
-          <form class="box" method="get">
+          <form class="box" method="post">
             {% csrf_token %}
             
             <div class="field">
@@ -65,7 +65,7 @@
               </div>
             </div>
     
-            <button class="button is-primary">Registrar</button>
+            <button type="submit" class="button is-primary">Registrar</button>
           </form>
     
         </section>
