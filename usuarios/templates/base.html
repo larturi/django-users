@@ -15,7 +15,7 @@
 
     <nav class="navbar is-light" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
-            <a class="navbar-item" href="https://bulma.io">
+            <a class="navbar-item" href="/login/">
                 <b>Django Users</b>
             </a>
         </div>
@@ -27,6 +27,7 @@
                         <div class="control">
                             {% if user.is_authenticated %}
                                 <a href="{% url 'users_app:logout' %}" class="button is-link">Logout</a>
+                                <a href="{% url 'users_app:change-password' %}" class="button is-link">Cambiar Password</a>
                             {% else %}
                                 <a href="{% url 'users_app:register' %}" class="button is-link">Registrar Usuario</a>
                             {% endif %}

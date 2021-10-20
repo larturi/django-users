@@ -9,12 +9,17 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 
-from .forms import LoginForm, UserRegisterForm
+from .forms import (
+    LoginForm, 
+    UserRegisterForm, 
+    UpdatePasswordForm
+)
+
 from .models import User
 class UserRegisterView(FormView):
     template_name = 'users/register.html'
     form_class = UserRegisterForm
-    success_url = '/authenticated'
+    success_url = reverse_lazy('users_app:authenticated')
 
     def form_valid(self, form):
 
@@ -32,7 +37,7 @@ class UserRegisterView(FormView):
 class LoginView(FormView):
     template_name = 'users/login.html'
     form_class = LoginForm
-    success_url = '/authenticated'
+    success_url = reverse_lazy('users_app:authenticated')
 
     def form_valid(self, form):
         user = authenticate(
@@ -68,6 +73,30 @@ class TemplatePruebaMixin(FechaMixin, TemplateView):
 class AuthenticatedView(LoginRequiredMixin, TemplateView):    
     template_name = 'users/authenticated.html'
     login_url = reverse_lazy('users_app:login')
+
+class UpdatePasswordView(LoginRequiredMixin, FormView):
+    template_name = 'users/update-password.html'
+    form_class = UpdatePasswordForm
+    success_url = reverse_lazy('users_app:login')
+    login_url = reverse_lazy('users_app:login')
+
+    def form_valid(self, form):
+
+        usuario = self.request.user
+
+        user = authenticate(
+            email = usuario.email,
+            password = form.cleaned_data['password_actual'],
+        )
+
+        if user:
+            new_password = form.cleaned_data['password_nuevo']
+            usuario.set_password(new_password)
+            usuario.save()
+
+        logout(self.request)
+
+        return super(UpdatePasswordView, self).form_valid(form)
 
 class ErrorView(TemplateView):    
     template_name = 'error.html'

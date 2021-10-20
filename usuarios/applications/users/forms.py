@@ -138,3 +138,28 @@ class UserRegisterForm(forms.ModelForm):
     def clean_password2(self):
         if self.cleaned_data['password1'] != self.cleaned_data['password2']:
             self.add_error('password2', 'Las contraseñas no coinciden')
+
+
+class UpdatePasswordForm(forms.Form):
+    
+    password_actual = forms.CharField(
+        label='Password Actual',
+        required=True,
+        widget=forms.PasswordInput(
+            attrs={
+                'placeholder': 'Password actual',
+                'class': 'input'
+            }
+        )
+    )
+
+    password_nuevo = forms.CharField(
+        label='Password Nuevo',
+        required=True,
+        widget=forms.PasswordInput(
+            attrs={
+                'placeholder': 'Password nuevo',
+                'class': 'input'
+            }
+        )
+    )
