@@ -1,14 +1,20 @@
+import datetime
+
 from django.shortcuts import render
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
-from django.contrib.auth import authenticate, login
+from django.views.generic import View, CreateView
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseRedirect
+from django.urls import reverse, reverse_lazy
 
 from .forms import LoginForm, UserRegisterForm
 from .models import User
 class UserRegisterView(FormView):
     template_name = 'users/register.html'
     form_class = UserRegisterForm
-    success_url = '/success'
+    success_url = '/authenticated'
 
     def form_valid(self, form):
 
@@ -26,7 +32,7 @@ class UserRegisterView(FormView):
 class LoginView(FormView):
     template_name = 'users/login.html'
     form_class = LoginForm
-    success_url = '/success'
+    success_url = '/authenticated'
 
     def form_valid(self, form):
         user = authenticate(
@@ -41,8 +47,27 @@ class LoginView(FormView):
 
         return super(LoginView, self).form_valid(form)
 
-class SuccessView(TemplateView):    
-    template_name = 'success.html'
+class LogoutView(View):
+
+    def get(self, request, *args, **kwargs):
+        logout(request)
+        return HttpResponseRedirect(
+            reverse('users_app:login')
+        )
+
+class FechaMixin(object):
+
+    def get_context_data(self, **kwargs):
+        context = super(FechaMixin, self).get_context_data(**kwargs)
+        context['fecha'] = datetime.datetime.now()
+        return context
+
+class TemplatePruebaMixin(FechaMixin, TemplateView):
+    template_name = 'users/mixin.html'
+
+class AuthenticatedView(LoginRequiredMixin, TemplateView):    
+    template_name = 'users/authenticated.html'
+    login_url = reverse_lazy('users_app:login')
 
 class ErrorView(TemplateView):    
     template_name = 'error.html'
