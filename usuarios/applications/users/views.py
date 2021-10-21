@@ -31,7 +31,7 @@ class UserRegisterView(FormView):
         # Codigo de verificacion de registro
         codigo = code_generator()
 
-        User.objects.create_user(
+        usuario = User.objects.create_user(
             form.cleaned_data['username'],
             form.cleaned_data['email'],
             form.cleaned_data['password1'],
@@ -51,7 +51,10 @@ class UserRegisterView(FormView):
         # Redireccion a vista de validacion
 
         return HttpResponseRedirect(
-            reverse('users_app:verification')
+            reverse(
+                'users_app:verification',
+                kwargs={'pk':usuario.id}
+            )
         )
 
 
@@ -128,6 +131,18 @@ class CodeVerificationView(FormView):
     form_class = VerificationForm
     success_url = reverse_lazy('users_app:login')
 
+    def get_form_kwargs(self):
+        kwargs = super(CodeVerificationView, self).get_form_kwargs()
+        kwargs.update({
+            'pk': self.kwargs['pk']
+        })
+
+        return kwargs
+
     def form_valid(self, form):
-       
+
+        User.objects.filter(
+            id=self.kwargs['pk']
+        ).update(is_active=True)
+
         return super(CodeVerificationView, self).form_valid(form)

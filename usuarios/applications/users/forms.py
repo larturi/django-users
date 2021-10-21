@@ -175,3 +175,22 @@ class VerificationForm(forms.Form):
             }
         )
     )
+
+    def __init__(self, pk, *args, **kwargs):
+            self.id_user = pk
+            super(VerificationForm, self).__init__(*args, **kwargs)
+
+    def clean_code_register(self):
+        codigo = self.cleaned_data['code_register']
+        
+        if len(codigo) == 6:
+            # Verifica que el id_user y code_verification sean validos
+            activo = User.objects.code_validation(
+                self.id_user,
+                codigo
+            )
+
+            if not activo:
+                raise forms.ValidationError('Codigo incorrecto')
+        else:
+            raise forms.ValidationError('Codigo incorrecto')
