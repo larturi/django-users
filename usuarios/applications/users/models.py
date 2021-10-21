@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.db.models.fields import BooleanField
 
 from .managers import UserManager
 
@@ -17,6 +18,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=50, blank=True)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True)
     is_staff = models.BooleanField(default=False)
+    code_register = models.CharField(max_length=6, blank=True)
+    is_active = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
 

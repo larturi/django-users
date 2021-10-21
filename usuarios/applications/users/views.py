@@ -1,6 +1,7 @@
 import datetime
 
 from django.shortcuts import render
+from django.core.mail import send_mail
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
 from django.views.generic import View, CreateView
@@ -9,19 +10,26 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 
+from .functions import code_generator
+
 from .forms import (
     LoginForm, 
     UserRegisterForm, 
-    UpdatePasswordForm
+    UpdatePasswordForm,
+    VerificationForm
 )
 
 from .models import User
 class UserRegisterView(FormView):
+
     template_name = 'users/register.html'
     form_class = UserRegisterForm
     success_url = reverse_lazy('users_app:authenticated')
 
     def form_valid(self, form):
+
+        # Codigo de verificacion de registro
+        codigo = code_generator()
 
         User.objects.create_user(
             form.cleaned_data['username'],
@@ -30,9 +38,22 @@ class UserRegisterView(FormView):
             first_name = form.cleaned_data['first_name'],
             last_name = form.cleaned_data['last_name'],
             gender = form.cleaned_data['gender'],
+            code_register = codigo
         )
 
-        return super(UserRegisterView, self).form_valid(form)
+        # Enviar el codigo al email del usuario
+        asunto = 'Confirmacion de email'
+        mensaje = 'Codigo de verificacion: ' + codigo
+        remitente = 'lea.arturi.drive@gmail.com'
+
+        send_mail(asunto, mensaje, remitente, [form.cleaned_data['email']])
+
+        # Redireccion a vista de validacion
+
+        return HttpResponseRedirect(
+            reverse('users_app:verification')
+        )
+
 
 class LoginView(FormView):
     template_name = 'users/login.html'
@@ -100,3 +121,13 @@ class UpdatePasswordView(LoginRequiredMixin, FormView):
 
 class ErrorView(TemplateView):    
     template_name = 'error.html'
+
+class CodeVerificationView(FormView):
+
+    template_name = 'users/verification.html'
+    form_class = VerificationForm
+    success_url = reverse_lazy('users_app:login')
+
+    def form_valid(self, form):
+       
+        return super(CodeVerificationView, self).form_valid(form)

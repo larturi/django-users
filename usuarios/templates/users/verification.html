@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %} Django Users App {% endblock title %}
+
+{% block content %}
+  <div class="container">
+
+    <div class="columns">
+      <div class="column"></div>
+
+      <div class="column is-four-fifths">
+        <section class="section">
+
+          <h1 class="title">Verification</h1>
+
+          <h4>Ingrese el codigo de verificacion recibido por email:</h4>
+
+          <br>
+
+          <form class="box" method="post">
+            {% csrf_token %}
+            
+            <div class="field">
+              <label class="label">{{ form.code_register.label_tag }}</label>
+              <div class="control">
+                {{ form.code_register }}
+              </div>
+            </div>
+    
+            <button type="submit" class="button is-primary">Enviar</button>
+          </form>
+
+          {% if form.non_field_errors  %}
+            <div class="notification is-info">
+              {{ form.non_field_errors }}            
+            </div>
+          {% endif %}
+          
+        </section>
+      </div>
+      <div class="column"></div>
+    </div>
+
+  </div>
+
+{% endblock content %}
+
+
+
+
