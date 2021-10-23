@@ -77,3 +77,4 @@ data_research/**/*.svg
 # Environment files
 .env
 *.DS_Store
+usuarios/.DS_Store

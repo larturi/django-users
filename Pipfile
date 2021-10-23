@@ -9,6 +9,7 @@ unipath = "*"
 pillow = "*"
 psycopg2-binary = "*"
 django-environ = "*"
+whitenoise = "*"
 
 [dev-packages]
 
