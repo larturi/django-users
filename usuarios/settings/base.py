@@ -10,7 +10,7 @@ env = environ.Env(
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Take environment variables from .env file
-environ.Env.read_env(os.path.join(BASE_DIR.parent.parent, '.env'))
+environ.Env.read_env(os.path.join(BASE_DIR.parent, '.env'))
 
 # False if not in os.environ because of casting above
 DEBUG = env('DEBUG')
