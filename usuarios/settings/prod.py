@@ -8,16 +8,14 @@ ALLOWED_HOSTS = ['*']
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+import dj_database_url
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('POSTGRES_DB'),
-        'USER': env('POSTGRES_USER'),
-        'PASSWORD': env('POSTGRES_PASSWORD'),
-        'HOST': env('POSTGRES_HOST'),
-        'PORT': "5432",
-    }
+    'default': dj_database_url.config(
+        default=env('DATABASE_URL')
+    )
 }
+
+
 
 # Envio de Emails con Gmail
 EMAIL_USE_TLS = True
