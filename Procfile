@@ -1,1 +1,1 @@
-web: gunicorn empleados.wsgi --log-file -
+web: gunicorn users.wsgi --log-file -
