@@ -60,7 +60,6 @@ local_settings.py
 
 # VS code
 .vscode
-static/
 backup/
 **/settings/private.py
 media/
