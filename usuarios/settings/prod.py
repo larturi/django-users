@@ -15,8 +15,6 @@ DATABASES = {
     )
 }
 
-
-
 # Envio de Emails con Gmail
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
